@@ -1,10 +1,13 @@
 import torch
+import cv2
+import os
+from datetime import datetime
 
 MODEL = "yolov5s"
 
-FILTER = ["suitcase", "cell phone", "backpack", "handbag"]
+FILTER = ["suitcase", "cell phone", "backpack", "handbag", "bed"]
 
-class Detecter:
+class Detector:
     def __init__(self, model = MODEL):
         try:
             # Model
@@ -13,9 +16,16 @@ class Detecter:
             print("Error in Detecter: fail to load model")
 
     #return list of records
-    def scanImg(self, imgpath, showImg = False, filter = True, showResult = False, saveFile = False, savePath = "Results_IMG"):
+    def scanImg(self,
+                img_path,
+                showImg = False,
+                filter = True,
+                showResult = False,
+                saveImg = False,
+                saveCrop = False,
+                savePath = "Results"):
 
-        results = self.model(imgpath)
+        results = self.model(img_path)
         txt_results = results.pandas().xyxy[0]
 
         if showImg:
@@ -25,8 +35,9 @@ class Detecter:
             #      xmin    ymin    xmax   ymax  confidence  class    name
             print(txt_results)
 
-        if saveFile:
-            results.save(savePath)
+        if saveImg:
+            saveDir = savePath + "/Images"
+            results.save(saveDir)
 
         objectlist = txt_results.to_dict(orient='records')
 
@@ -35,11 +46,29 @@ class Detecter:
                 if not (obj["name"] in FILTER):
                     objectlist.remove(obj)
 
+        if saveCrop:
+            img = cv2.imread(img_path)
+            saveDir = savePath + "/Crops"
+            if not os.path.exists(saveDir):
+                os.makedirs(saveDir)
+            id = 1
+            for obj in reversed(objectlist):
+                now = datetime.now()
+                current_time = now.strftime("%Y%m%d_%H%M%S")
+                xmin = int(obj.get('xmin'))
+                ymin = int(obj.get('ymin'))
+                xmax = int(obj.get('xmax'))
+                ymax = int(obj.get('ymax'))
+                crop_img = img[ymin:ymax, xmin:xmax]
+                filename = current_time + '_' + str(id) + '.jpg'
+                filepath =  os.path.join(saveDir, filename)
+                cv2.imwrite(filepath, crop_img)
+                id+=1
 
         return objectlist
 
 # Sample
 
-# detecter = Detecter()
+# detector = Detector()
 
-# detecter.scanImg("example1.jpg", showImg=True, showResult=True)
+# detector.scanImg("example1.jpg", showImg=True, showResult=True)

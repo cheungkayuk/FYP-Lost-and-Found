@@ -3,7 +3,7 @@ import cv2
 import os
 from datetime import datetime
 
-MODEL = "yolov5s"
+MODEL = "yolov5l"
 
 FILTER = ["suitcase", "cell phone", "backpack", "handbag", "bed"]
 
@@ -14,6 +14,7 @@ class Detector:
             self.model = torch.hub.load('ultralytics/yolov5', model)  # or yolov5m, yolov5l, yolov5x, etc.
         except:
             print("Error in Detecter: fail to load model")
+        Detector.id = 1
 
     #return list of records
     def scanImg(self,
@@ -30,10 +31,6 @@ class Detector:
 
         if showImg:
             results.show()
-        
-        if showResult:
-            #      xmin    ymin    xmax   ymax  confidence  class    name
-            print(txt_results)
 
         if saveImg:
             saveDir = savePath + "/Images"
@@ -46,13 +43,13 @@ class Detector:
                 if not (obj["name"] in FILTER):
                     objectlist.remove(obj)
 
-        id = 1
         for obj in reversed(objectlist):
             now = datetime.now()
             current_time = now.strftime("%Y%m%d_%H%M%S")
 
-            obj["id"] = current_time + '_' + str(id)
-            id+=1
+            obj["id"] = current_time + '_' + str(Detector.id)
+            obj["timestamp"] = now
+            Detector.id+=1
 
         if saveCrop:
             img = cv2.imread(img_path)
@@ -70,6 +67,8 @@ class Detector:
                 filepath =  os.path.join(saveDir, filename)
                 cv2.imwrite(filepath, crop_img)
     
+        if showResult:
+            print(objectlist)
 
         return objectlist
 
@@ -77,4 +76,4 @@ class Detector:
 
 # detector = Detector()
 
-# print(detector.scanImg("example1.jpg", showImg=True, showResult=False, saveCrop=True))
+# detector.scanImg("example5.jpg", showImg=True, saveCrop=False, showResult=True)

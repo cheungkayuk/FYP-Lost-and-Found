@@ -1,4 +1,4 @@
-from src.MongoController import MongoController
+from MongoController import MongoController
 import time
 
 checkpointName = "B"

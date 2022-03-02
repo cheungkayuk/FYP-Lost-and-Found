@@ -49,6 +49,7 @@ class Detector:
 
             obj["obj_id"] = current_time + '_' + str(Detector.id)
             obj["time"] = now
+            obj["img_path"] = obj["obj_id"] + ".jpg"
             Detector.id+=1
 
         if saveCrop:
@@ -63,7 +64,7 @@ class Detector:
                 xmax = int(obj.get('xmax'))
                 ymax = int(obj.get('ymax'))
                 crop_img = img[ymin:ymax, xmin:xmax]
-                filename = obj["obj_id"] + '.jpg'
+                filename = obj["img_path"]
                 filepath =  os.path.join(saveDir, filename)
                 cv2.imwrite(filepath, crop_img)
     

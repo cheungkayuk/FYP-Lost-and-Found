@@ -43,7 +43,7 @@ class Detector:
                 if not (obj["name"] in FILTER):
                     objectlist.remove(obj)
 
-        for obj in reversed(objectlist):
+        for obj in objectlist:
             now = datetime.now()
             current_time = now.strftime("%Y%m%d_%H%M%S")
 
@@ -58,7 +58,7 @@ class Detector:
             if not os.path.exists(saveDir):
                 os.makedirs(saveDir)
    
-            for obj in reversed(objectlist):
+            for obj in objectlist:
                 xmin = int(obj.get('xmin'))
                 ymin = int(obj.get('ymin'))
                 xmax = int(obj.get('xmax'))

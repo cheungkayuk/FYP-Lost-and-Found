@@ -14,7 +14,7 @@ class Detector:
             self.model = torch.hub.load('ultralytics/yolov5', model)  # or yolov5m, yolov5l, yolov5x, etc.
         except:
             print("Error in Detecter: fail to load model")
-        Detector.id = 0
+        Detector.id = 1
 
     #return list of records
     def scanImg(self,

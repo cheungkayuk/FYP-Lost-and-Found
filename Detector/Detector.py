@@ -47,8 +47,8 @@ class Detector:
             now = datetime.now()
             current_time = now.strftime("%Y%m%d_%H%M%S")
 
-            obj["id"] = current_time + '_' + str(Detector.id)
-            obj["timestamp"] = now
+            obj["obj_id"] = current_time + '_' + str(Detector.id)
+            obj["time"] = now
             Detector.id+=1
 
         if saveCrop:
@@ -63,7 +63,7 @@ class Detector:
                 xmax = int(obj.get('xmax'))
                 ymax = int(obj.get('ymax'))
                 crop_img = img[ymin:ymax, xmin:xmax]
-                filename = obj["id"] + '.jpg'
+                filename = obj["obj_id"] + '.jpg'
                 filepath =  os.path.join(saveDir, filename)
                 cv2.imwrite(filepath, crop_img)
     

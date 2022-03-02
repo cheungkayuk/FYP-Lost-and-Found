@@ -1,4 +1,4 @@
-from MongoController import MongoController
+from src.MongoController import MongoController
 import time
 
 checkpointName = "B"
@@ -10,35 +10,59 @@ data = {
     "directions" : [
         {
             "direction": 250,
-            "detecedObjects": [
+            "detectedObjects": [
                 {
                     "className" : 'handbag',
-                    "boxCoordinates": {"topLeft": { "x": (123), "y": (456)} , "bottomRight": { "x": (567), "y": (890)} }
+                    "xmin": 459,
+                    "ymin": 802,
+                    "xmax": 1161,
+                    "ymax": 1720,
+                    "time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 },
                 {
                     "className" : 'cellphone',
-                    "boxCoordinates": {"topLeft": { "x": (3), "y": (46)} , "bottomRight": { "x": (57), "y": (0)} }
+                    "xmin": 12,
+                    "ymin": 10,
+                    "xmax": 100,
+                    "ymax": 1000,
+                    "time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 },
                 {
                     "className" : 'suitcase',
-                    "boxCoordinates": {"topLeft": { "x": (23), "y": (56)} , "bottomRight": { "x": (56), "y": (89)} }
+                    "xmin": 1459,
+                    "ymin": 1802,
+                    "xmax": 1061,
+                    "ymax": 720,
+                    "time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 }
             ]
         },
         {
             "direction": -110,
-            "detecedObjects": [
+            "detectedObjects": [
                 {
-                    "className" : 'bag',
-                    "boxCoordinates": {"topLeft": { "x": (123), "y": (456)} , "bottomRight": { "x": (567), "y": (890)} }
+                    "className" : 'cellphone',
+                    "xmin": 49,
+                    "ymin": 80,
+                    "xmax": 116,
+                    "ymax": 170,
+                    "time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 },
                 {
-                    "className" : 'suitcase',
-                    "boxCoordinates": {"topLeft": { "x": (3), "y": (46)} , "bottomRight": { "x": (57), "y": (0)} }
+                    "className" : 'cellphone',
+                    "xmin": 112,
+                    "ymin": 110,
+                    "xmax": 1100,
+                    "ymax": 100,
+                    "time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 },
                 {
                     "className" : 'purse',
-                    "boxCoordinates": {"topLeft": { "x": (23), "y": (56)} , "bottomRight": { "x": (56), "y": (89)} }
+                    "xmin": 159,
+                    "ymin": 182,
+                    "xmax": 101,
+                    "ymax": 70,
+                    "time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 }
             ]
         }
@@ -47,21 +71,43 @@ data = {
 
 newdetecedObjects = [
                 {
-                    "className" : 'purse',
-                    "boxCoordinates": {"topLeft": { "x": (1123), "y": (1456)} , "bottomRight": { "x": (1567), "y": (1890)} }
+                    'id': 1,
+                    "className" : 'suitcase',
+                    "xmin": 149,
+                    "ymin": 180,
+                    "xmax": 176,
+                    "ymax": 1170,
+                    "imgsrc": '/img/C/C1/01.jpg',
+                    "time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 },
                 {
+                    'id': 2,
                     "className" : 'purse',
-                    "boxCoordinates": {"topLeft": { "x": (13), "y": (146)} , "bottomRight": { "x": (157), "y": (10)} }
+                    "xmin": 1149,
+                    "ymin": 1180,
+                    "xmax": 1116,
+                    "ymax": 1170,
+                    "imgsrc": '/img/C/C1/02.jpg',
+                    "time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 },
                 {
+                    'id': 3,
                     "className" : 'purse',
-                    "boxCoordinates": {"topLeft": { "x": (123), "y": (156)} , "bottomRight": { "x": (156), "y": (189)} }
+                    "xmin": 4911,
+                    "ymin": 801,
+                    "xmax": 1161,
+                    "ymax": 1701,
+                    "imgsrc": '/img/C/C1/03.jpg',
+                    "time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 }
             ]
 
 
 
 controller = MongoController()
+# pass in checkpoint coordinate, then direction angle
 controller.createNewCheckpoint("C", 100, 100, [120, -120, 360])
-controller.updateData("C", "C1", newdetecedObjects, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+controller.updateData("C", "C1", newdetecedObjects)
+controller.queryFromDbDirectionName("C", "C1")
+#controller.deleteData("C", "C1", 1, "suitcase")
+#controller.queryFromDbDirectionName("C", "C1")

@@ -53,7 +53,7 @@ class Robot_Controller:
     def getlocation(self):
         self.ser.write(GET_LOCATION)
         print("Get location...")
-        serBarCode = self.ser.read(30)
+        serBarCode = ser.read(30)
         print(f"received: {serBarCode.hex()}")
         x = serBarCode[4:8]
         y = serBarCode[8:12]
@@ -83,7 +83,7 @@ class Robot_Controller:
         self.ser.write(command)
         print("Sent GoTo Command...")
         while True:
-            serBarCode = self.ser.read(30)
+            serBarCode = ser.read(30)
             if (serBarCode.hex()[0:10] == "5577030303"):
                 print(f"received: {serBarCode.hex()}")
                 print("reach point successfully.\n")

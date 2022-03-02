@@ -46,24 +46,30 @@ class Detector:
                 if not (obj["name"] in FILTER):
                     objectlist.remove(obj)
 
+        id = 1
+        for obj in reversed(objectlist):
+            now = datetime.now()
+            current_time = now.strftime("%Y%m%d_%H%M%S")
+
+            obj["id"] = current_time + '_' + str(id)
+            id+=1
+
         if saveCrop:
             img = cv2.imread(img_path)
             saveDir = savePath + "/Crops"
             if not os.path.exists(saveDir):
                 os.makedirs(saveDir)
-            id = 1
+   
             for obj in reversed(objectlist):
-                now = datetime.now()
-                current_time = now.strftime("%Y%m%d_%H%M%S")
                 xmin = int(obj.get('xmin'))
                 ymin = int(obj.get('ymin'))
                 xmax = int(obj.get('xmax'))
                 ymax = int(obj.get('ymax'))
                 crop_img = img[ymin:ymax, xmin:xmax]
-                filename = current_time + '_' + str(id) + '.jpg'
+                filename = obj["id"] + '.jpg'
                 filepath =  os.path.join(saveDir, filename)
                 cv2.imwrite(filepath, crop_img)
-                id+=1
+    
 
         return objectlist
 
@@ -71,4 +77,4 @@ class Detector:
 
 # detector = Detector()
 
-# detector.scanImg("example1.jpg", showImg=True, showResult=True)
+# print(detector.scanImg("example1.jpg", showImg=True, showResult=False, saveCrop=True))

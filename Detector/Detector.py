@@ -5,7 +5,7 @@ from datetime import datetime
 
 MODEL = "yolov5l"
 
-FILTER = ["suitcase", "cell phone", "backpack", "handbag", "bed"]
+FILTER = ["suitcase", "cell phone", "backpack", "handbag"]
 
 class Detector:
     def __init__(self, model = MODEL):

@@ -3,6 +3,8 @@ from MongoController.MongoController import MongoController
 import time
 
 TIME_THRESHOLD_SECOND = 1
+IOU_2_SCENE = 0.5
+IOU_1_SCENE = 0.85
 
 def iou_cal(box1, box2):
     # box:[x1,y2,x2,y2]-->[xmin, ymin, xmax, ymax]
@@ -29,7 +31,7 @@ def compare2scene(scene1, scene2):
                 # print(iou)
                 # print("\n")
 
-                if (iou > 0.5):
+                if (iou > IOU_2_SCENE):
                     if True:    #similarity(pic1,pic2)>0.5
                         match = True
                         newlist[i] += 1
@@ -56,6 +58,24 @@ def compare2scene(scene1, scene2):
 
     return scene1
 
+def findstationaryobj(scene1, scene2):
+    for scene1obj in reversed(scene1):
+        match = False
+        for i,scene2obj in enumerate(scene2):
+
+            if (scene1obj["name"] == scene2obj["name"]):
+                iou = iou_cal(scene1obj, scene2obj)
+
+
+                if (iou > IOU_1_SCENE):
+                    if True:    #similarity(pic1,pic2)>0.5
+                        match = True
+                        break
+
+        if match == False:
+            scene1.remove(scene1obj)
+
+    return scene1
 
 
 #sample
@@ -66,7 +86,7 @@ def compare2scene(scene1, scene2):
 
 # oblist1 = controller.queryFromDbDirectionName("A", "A0")
 
-# oblist2 = detecter.scanImg("example1.jpg", filter=False, saveCrop=False, showResult=False)
+# oblist2 = detecter.scanImg("example1.jpg", filter=False, saveCrop=False, showResult=False, saveImg=True)
 
 # time.sleep(5)
 

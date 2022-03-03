@@ -22,8 +22,8 @@ class Detector:
                 showImg = False,
                 filter = True,
                 showResult = False,
-                saveImg = False,
-                saveCrop = False,
+                saveImg = True,
+                saveCrop = True,
                 savePath = "Results"):
 
         results = self.model(img_path)
@@ -31,10 +31,6 @@ class Detector:
 
         if showImg:
             results.show()
-
-        if saveImg:
-            saveDir = savePath + "/Images"
-            results.save(saveDir)
 
         objectlist = txt_results.to_dict(orient='records')
 
@@ -51,6 +47,13 @@ class Detector:
             obj["time"] = now
             obj["img_path"] = obj["obj_id"] + ".jpg"
             Detector.id+=1
+
+        if saveImg:
+            saveDir = savePath + "/Images/" + current_time + "/"
+            fileName = current_time + ".jpg"
+            results.save(saveDir)
+            oldname = os.listdir(saveDir)[0]
+            os.rename(saveDir + oldname, saveDir + fileName)
 
         if saveCrop:
             img = cv2.imread(img_path)

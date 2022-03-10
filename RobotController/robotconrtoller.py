@@ -49,6 +49,7 @@ def dectobyte(decinput):
 class Robot_Controller:
     def __init__(self):
         self.ser = serial.Serial(SERIAL_PORT, SERIAL_BAUD, timeout=5)
+        self.moving = False
 
     def getlocation(self):
         self.ser.write(GET_LOCATION)
@@ -72,6 +73,8 @@ class Robot_Controller:
         return [x,y,a,w,th]
 
     def goto(self, point):
+        self.moving = True
+
         command = "55770102"
         command += dectohex(point[0])
         command += dectohex(point[1])
@@ -83,11 +86,12 @@ class Robot_Controller:
         self.ser.write(command)
         print("Sent GoTo Command...")
         while True:
-            serBarCode = ser.read(30)
+            serBarCode = self.ser.read(30)
             if (serBarCode.hex()[0:10] == "5577030303"):
                 print(f"received: {serBarCode.hex()}")
                 print("reach point successfully.\n")
-                return
+                self.moving = False
+                return True
 
     def close(self):
         self.ser.close()

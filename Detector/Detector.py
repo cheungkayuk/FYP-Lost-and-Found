@@ -3,12 +3,13 @@ import cv2
 import os
 from datetime import datetime
 
-MODEL = "yolov5l"
+MODEL = "yolov5s"
 
 FILTER = ["suitcase", "cell phone", "backpack", "handbag"]
 
 class Detector:
     def __init__(self, model = MODEL):
+        self.working = False
         try:
             # Model
             self.model = torch.hub.load('ultralytics/yolov5', model)  # or yolov5m, yolov5l, yolov5x, etc.
@@ -26,6 +27,7 @@ class Detector:
                 saveCrop = True,
                 savePath = "Results"):
 
+        self.working = True
         results = self.model(img_path)
         txt_results = results.pandas().xyxy[0]
 
@@ -74,6 +76,7 @@ class Detector:
         if showResult:
             print(objectlist)
 
+        self.working = False
         return objectlist
 
 # Sample

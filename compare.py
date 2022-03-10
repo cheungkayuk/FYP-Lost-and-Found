@@ -19,6 +19,8 @@ def iou_cal(box1, box2):
 
 def compare2scene(scene1, scene2):
     newlist = [0] * len(scene2)
+
+    report_list = []
     
     for scene1obj in reversed(scene1):
         match = False
@@ -40,6 +42,7 @@ def compare2scene(scene1, scene2):
                         if timed > TIME_THRESHOLD_SECOND:   #time being placed for long time
                             pass
                             #report
+                            report_list.append(scene1obj)
                             scene1.remove(scene1obj)
                         else:   #Two objects are the same one but not exceeds the threshold yet
                             pass
@@ -56,7 +59,7 @@ def compare2scene(scene1, scene2):
             print(scene2[i]["name"], " Is new!!\n") #add to database
             scene1.append(scene2[i])
 
-    return scene1
+    return report_list
 
 def findstationaryobj(scene1, scene2):
     for scene1obj in reversed(scene1):
@@ -75,7 +78,7 @@ def findstationaryobj(scene1, scene2):
         if match == False:
             scene1.remove(scene1obj)
 
-    return scene1
+    return
 
 
 #sample

@@ -174,10 +174,10 @@ class Alerter:
 
             # send_msg()
             temp = f"Found {classname} at checkpoint {checkpoint} with direction {direction} at {detectedTime} "
-            # send_msg(temp)
+            send_msg(temp)
             print(f"Send message with send_msg: Found {classname} at checkpoint {checkpoint} with direction {direction} at {detectedTime} ")
             # send_img()
-            #send_img(image)
+            send_img(image)
             print(f"Send image with send_img: filename {image}\n")
     
     # sample to use with sendToLog() and readAndSendFromLog()

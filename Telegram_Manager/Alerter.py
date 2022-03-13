@@ -131,9 +131,62 @@ class Alerter:
     def send_msg(self, msg):
         self.client(SendMessageRequest(self.receiver, msg))
 
+    # each call to this function will append new log to message log file
+    def sendToLog(self, imgFileName, className, checkpoint, direction, detectedTime):
+        Log_Format = "%(levelname)s - %(message)s"
+        now = datetime.datetime.now()
+        currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
+        # log to a file called message.log
+        logging.basicConfig(filename='message.log', format=Log_Format, level=logging.INFO)
+        logger = logging.getLogger()
+        
+        content = "|"+str(currentTime)+"|"+imgFileName+","+className+","+checkpoint+","+direction+","+str(detectedTime)
+        """
+        Log format
+            |<datetime to send message>|<image filename>,<classname>,<checkpoint>,<direction>,<detectedtime>
+        INFO - |2022-03-13 19:59:07|abc.jpg,suitcase,A,A1,2022-03-13 18:59:07
+        """
+        try:
+            logger.info(content)
+            print("Logged", content,"to logfile!")
+        except Exception as e:
+            print(e)
+
+    # read log contents froma file called message.log, then send the contents of each line
+    def readAndSendFromLog(self):
+        try:
+            with open("message.log") as f:
+                f = f.readlines()
+        except Exception as e:
+            print(e)
+        
+        for line in f:
+            contents = line.split("|")
+            # message in index 2, in form of <image filename>,<classname>,<checkpoint>,<direction>,<detectedtime>
+            message = contents[2]
+            # decompose message
+            messages = message.split(",")
+            image = messages[0]
+            classname = messages[1]
+            checkpoint = messages[2]
+            direction = messages[3]
+            detectedTime = messages[4]
+
+            # send_msg()
+            temp = f"Found {classname} at checkpoint {checkpoint} with direction {direction} at {detectedTime} "
+            # send_msg(temp)
+            print(f"Send message with send_msg: Found {classname} at checkpoint {checkpoint} with direction {direction} at {detectedTime} ")
+            # send_img()
+            #send_img(image)
+            print(f"Send image with send_img: filename {image}\n")
+    
+    # sample to use with sendToLog() and readAndSendFromLog()
+    #oneHourB4Now = (datetime.datetime.now() - datetime.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
+    #sendToLog("abc.jpg", "suitcase", "A", "A1", oneHourB4Now)
+    #readAndSendFromLog()
+
 
     def disconnect(self):
     # disconnecting the telegram session 
         self.kill()
         print("Disconnecting Alerter...\n")
-       

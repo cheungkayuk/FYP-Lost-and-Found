@@ -5,18 +5,20 @@ from PIL import Image
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import mean_squared_error as mse
 
-class Similarity():
-    def cal_similar(hash1, hash2):
+class Similarity:
+    def cal_similar(self, hash1, hash2):
         sim = 1 - (hash1 - hash2) / len(hash1.hash) ** 2
         return sim
 
-    def similarity (image1, image2, method, threshold1, threshold2, threshold3):
+    def similarity (self, image1, image2, method, threshold1, threshold2, threshold3):
 
         hash_size = 8
         mode = 'db4'
         image_scale = 64
-
+        
         if method == "ssim":
+            image1 = cv2.imread(image1)
+            image2 = cv2.imread(image2)
             image1 = cv2.resize(image1, (5000, 5000))
             image2 = cv2.resize(image2, (5000, 5000))
             image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
@@ -27,6 +29,8 @@ class Similarity():
             return False
 
         elif method == "dhash":
+            image1 = Image.open(image1)
+            image2 = Image.open(image2)
             dhash1 = imagehash.dhash(image1, hash_size = hash_size)
             dhash2 = imagehash.dhash(image2, hash_size = hash_size)
             s = self.cal_similar(dhash1, dhash2)
@@ -35,9 +39,19 @@ class Similarity():
             return False
 
         elif method == "whash":
+            image1 = Image.open(image1)
+            image2 = Image.open(image2)
             whash1 = imagehash.whash(image1, image_scale = image_scale, hash_size = hash_size, mode = mode)
             whash2 = imagehash.whash(image2, image_scale = image_scale, hash_size = hash_size, mode = mode)
-            s = self.cal_similar(dhash1, dhash2)
+            s = self.cal_similar(whash1, whash2)
             if s > threshold3:
                 return True
             return False
+
+# from Similarity import Similarity
+# image1 = "crop1.png"
+# image2 = "crop2.png"
+# # image1 = cv2.imread(image1)
+# # image2 = cv2.imread(image2)
+# s = Similarity()
+# s.similarity(image1, image2, method="ssim", threshold1=0.8, threshold2=0.6, threshold3=0.6)

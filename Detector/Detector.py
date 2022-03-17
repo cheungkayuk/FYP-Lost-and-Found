@@ -41,21 +41,22 @@ class Detector:
                 if not (obj["name"] in FILTER):
                     objectlist.remove(obj)
 
-        for obj in objectlist:
-            now = datetime.now()
-            current_time = now.strftime("%Y%m%d_%H%M%S")
-
-            obj["obj_id"] = current_time + '_' + str(Detector.id)
-            obj["time"] = now
-            obj["img_path"] = obj["obj_id"] + ".jpg"
-            Detector.id+=1
-
+        now = datetime.now()
+        current_time = now.strftime("%Y%m%d_%H%M%S")
+        saveDir = savePath + "/Images/" + current_time + "/"
+        fileName = current_time + ".jpg"
         if saveImg:
-            saveDir = savePath + "/Images/" + current_time + "/"
-            fileName = current_time + ".jpg"
             results.save(saveDir)
             oldname = os.listdir(saveDir)[0]
             os.rename(saveDir + oldname, saveDir + fileName)
+
+        for obj in objectlist:
+
+            obj["obj_id"] = current_time + '_' + str(Detector.id)
+            obj["time"] = now
+            obj["img_path"] = savePath + "/Crops/" + obj["obj_id"] + ".jpg"
+            obj["full_img"] = saveDir + fileName
+            Detector.id+=1
 
         if saveCrop:
             img = cv2.imread(img_path)
@@ -69,7 +70,7 @@ class Detector:
                 xmax = int(obj.get('xmax'))
                 ymax = int(obj.get('ymax'))
                 crop_img = img[ymin:ymax, xmin:xmax]
-                filename = obj["img_path"]
+                filename = obj["obj_id"] + ".jpg"
                 filepath =  os.path.join(saveDir, filename)
                 cv2.imwrite(filepath, crop_img)
     

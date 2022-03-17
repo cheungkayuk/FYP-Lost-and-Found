@@ -105,3 +105,5 @@ class LAF_Robot():
     def get_img(self):
         pass
 
+    def init_database(self):
+        self.controller.createNewCheckpoint("A", 1.446, 7.002, [(0,1)])

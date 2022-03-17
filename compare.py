@@ -1,6 +1,8 @@
 from Detector.Detector import Detector
 from MongoController.MongoController import MongoController
 from Similarity.Similarity import Similarity
+from Telegram_Manager.Alerter import Alerter
+
 import time
 
 TIME_THRESHOLD_SECOND = 1
@@ -88,27 +90,37 @@ def findstationaryobj(scene1, scene2, sim_method = "ssim"):
 
 #sample
 
-detecter = Detector()
+# detecter = Detector()
+# alerter = Alerter()
 
-controller = MongoController()
+# controller = MongoController()
 
-oblist1 = controller.queryFromDbDirectionName("A", "A0")
+# oblist1 = controller.queryFromDbDirectionName("A", "A0")
 
-oblist2 = detecter.scanImg("img1.jpg", filter=False, saveCrop=True, showResult=False, saveImg=True)
+# obj = oblist1[0]
 
-controller.updateData("A", "A0", oblist2)
+# alerter.sendToLog(obj["full_img"], obj["name"], "A1", "gg", obj["time"])
+# alerter.readAndSendFromLog()
 
-time.sleep(5)
+#///////////////////////////////////////////////////////////////////
 
-oblist3 = detecter.scanImg("img3.jpg", filter=False, saveCrop=True, showResult=False)
+# sendToLog(self, imgFileName, className, checkpoint, direction, detectedTime)
 
-result = compare2scene(oblist2, oblist3)
+# oblist2 = detecter.scanImg("img1.jpg", filter=False, saveCrop=True, showResult=False, saveImg=True)
 
-controller.updateData("A", "A0", oblist2)
+# controller.updateData("A", "A0", oblist2)
 
-print("\n\nReport item:")
-for item in result:
-    print(item["name"])
+# time.sleep(5)
+
+# oblist3 = detecter.scanImg("img3.jpg", filter=False, saveCrop=True, showResult=False)
+
+# result = compare2scene(oblist2, oblist3)
+
+# controller.updateData("A", "A0", oblist2)
+
+# print("\n\nReport item:")
+# for item in result:
+#     print(item["name"])
 # print(result)
 
 

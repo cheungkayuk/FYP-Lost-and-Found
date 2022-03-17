@@ -106,7 +106,7 @@ newdetecedObjects = [
 
 controller = MongoController()
 # pass in checkpoint coordinate, then direction angle
-controller.createNewCheckpoint("C", 100, 100, [120, -120, 360])
+controller.createNewCheckpoint("C", 100, 100, [(0,1), (1,0), (0,0)])
 controller.updateData("C", "C1", newdetecedObjects)
 controller.queryFromDbDirectionName("C", "C1")
 #controller.deleteData("C", "C1", 1, "suitcase")

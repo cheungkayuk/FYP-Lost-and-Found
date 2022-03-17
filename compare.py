@@ -1,10 +1,13 @@
 from Detector.Detector import Detector
 from MongoController.MongoController import MongoController
+from Similarity.Similarity import Similarity
 import time
 
 TIME_THRESHOLD_SECOND = 1
-IOU_2_SCENE = 0.5
+IOU_2_SCENE = 0.6
 IOU_1_SCENE = 0.85
+
+s = Similarity()
 
 def iou_cal(box1, box2):
     # box:[x1,y2,x2,y2]-->[xmin, ymin, xmax, ymax]
@@ -17,7 +20,7 @@ def iou_cal(box1, box2):
     iou = inter / union
     return iou
 
-def compare2scene(scene1, scene2):
+def compare2scene(scene1, scene2, sim_method = "ssim"):
     newlist = [0] * len(scene2)
 
     report_list = []
@@ -34,7 +37,8 @@ def compare2scene(scene1, scene2):
                 # print("\n")
 
                 if (iou > IOU_2_SCENE):
-                    if True:    #similarity(pic1,pic2)>0.5
+                    r = s.similarity(scene1obj["img_path"],scene2obj["img_path"], method=sim_method)
+                    if r[0]:    #similarity(pic1,pic2)>0.5
                         match = True
                         newlist[i] += 1
                         timed = (scene2obj["time"] - scene1obj["time"])
@@ -49,19 +53,19 @@ def compare2scene(scene1, scene2):
                         break
 
         if match == False:
-            print(scene1obj["name"], "is disappear!\n") #delete from database
-            scene1.remove(scene1obj)
+            print(scene1obj["name"], "is disappear!\n")
+            scene1.remove(scene1obj) #delete from database
             
 
-    print(newlist)
+    # print(newlist)
     for i in range(len(newlist)):
         if newlist[i] == 0:
-            print(scene2[i]["name"], " Is new!!\n") #add to database
-            scene1.append(scene2[i])
+            print(scene2[i]["name"], " Is new!!\n")
+            scene1.append(scene2[i]) #add to database
 
     return report_list
 
-def findstationaryobj(scene1, scene2):
+def findstationaryobj(scene1, scene2, sim_method = "ssim"):
     for scene1obj in reversed(scene1):
         match = False
         for i,scene2obj in enumerate(scene2):
@@ -71,7 +75,8 @@ def findstationaryobj(scene1, scene2):
 
 
                 if (iou > IOU_1_SCENE):
-                    if True:    #similarity(pic1,pic2)>0.5
+                    r = s.similarity(scene1obj["img_path"],scene2obj["img_path"], method=sim_method)
+                    if r[0]:    #similarity(pic1,pic2)>0.5
                         match = True
                         break
 
@@ -83,21 +88,27 @@ def findstationaryobj(scene1, scene2):
 
 #sample
 
-# detecter = Detector()
+detecter = Detector()
 
-# controller = MongoController()
+controller = MongoController()
 
-# oblist1 = controller.queryFromDbDirectionName("A", "A0")
+oblist1 = controller.queryFromDbDirectionName("A", "A0")
 
-# oblist2 = detecter.scanImg("example1.jpg", filter=False, saveCrop=False, showResult=False, saveImg=True)
+oblist2 = detecter.scanImg("img1.jpg", filter=False, saveCrop=True, showResult=False, saveImg=True)
 
-# time.sleep(5)
+controller.updateData("A", "A0", oblist2)
 
-# oblist3 = detecter.scanImg("example2.jpg", filter=False, saveCrop=False, showResult=False)
+time.sleep(5)
 
-# result = compare2scene(oblist2, oblist3)
+oblist3 = detecter.scanImg("img3.jpg", filter=False, saveCrop=True, showResult=False)
 
-# controller.updateData("A", "A0", result)
+result = compare2scene(oblist2, oblist3)
+
+controller.updateData("A", "A0", oblist2)
+
+print("\n\nReport item:")
+for item in result:
+    print(item["name"])
 # print(result)
 
 

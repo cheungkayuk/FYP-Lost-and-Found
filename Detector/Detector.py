@@ -1,3 +1,4 @@
+from numpy import source
 import torch
 import cv2
 import os
@@ -12,7 +13,7 @@ class Detector:
         self.working = False
         try:
             # Model
-            self.model = torch.hub.load('ultralytics/yolov5', model)  # or yolov5m, yolov5l, yolov5x, etc.
+            self.model = torch.hub.load('ultralytics_yolov5_master', "custom", path="yolov5s.pt", source="local" )  # or yolov5m, yolov5l, yolov5x, etc.
         except:
             print("Error in Detecter: fail to load model")
         Detector.id = 1

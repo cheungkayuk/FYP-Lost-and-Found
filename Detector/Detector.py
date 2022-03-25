@@ -46,7 +46,7 @@ class Detector:
         saveDir = savePath + "/Images/" + current_time + "/"
         fileName = current_time + ".jpg"
         if saveImg:
-            results.save(saveDir)
+            results.save(save_dir=saveDir)
             oldname = os.listdir(saveDir)[0]
             os.rename(saveDir + oldname, saveDir + fileName)
 

@@ -6,13 +6,14 @@ import threading
 import asyncio
 import time
 from time import sleep
-from hikvisionapi import Client
 
 ###################################################################################
-A1 = ["A1",(1.446,7.002,0,1)]
-A2 = ["A2",(1.446,7.002,0,1)]
-B1 = ["B1",(1.446,7.002,0,1)]
-B2 = ["B2",(1.446,7.002,0,1)]
+A0 = ["A1",(3.558732032775879, 6.074324131011963, 0.977596640586853, 0.21048696339130402)]
+A1 = ["A0",(3.558732032775879, 6.074324131011963, -0.7992277145385742, 0.6010283827781677)]
+B0 = ["B0",(6.456136703491211, 5.444826602935791, -0.08248760551214218, 0.996592104434967)]
+B1 = ["B1",(6.456136703491211, 5.444826602935791, -0.8250911235809326, 0.5649996995925903)]
+# B0 = ["B1",(11.809239387512207, 4.119314670562744, -0.13229386508464813, 0.9912105202674866)]
+# B1 = ["B2",(11.817338943481445, 4.065883159637451, -0.777592658996582, 0.6287683248519897)]
 # Point_B = (3.814,6.426,0,1)
 # Point_C = (6.541,5.683,0,1)
 
@@ -21,7 +22,7 @@ CAMERA_USER = ""
 CAMERA_PW = ""
 CAMERA_PIC = ""
 
-PATROL_PATH = [A1, A2, B1, B2]
+PATROL_PATH = [A0, A1, B0, B1]
 ###################################################################################
 
 
@@ -33,6 +34,7 @@ class LAF_Robot():
 
         self.patrol_path = PATROL_PATH
         self.current_idx = start_idx
+        self._scan_road = 0
 
         self.mode = 0   # 0: nothing    1: 1st class    2: 2nd class
         self.t = threading.Thread(target=self._scan_road)
@@ -41,7 +43,7 @@ class LAF_Robot():
         self.keep_patrol = True
 
         # connect to camera
-        self.cam = Client(f"http://{CAMERA_IP}", CAMERA_USER, CAMERA_PW)
+        # self.cam = Client(f"http://{CAMERA_IP}", CAMERA_USER, CAMERA_PW)
 
     def start_patrol(self):
         while(self.keep_patrol):
@@ -107,3 +109,10 @@ class LAF_Robot():
 
     def init_database(self):
         self.controller.createNewCheckpoint("A", 1.446, 7.002, [(0,1)])
+
+robot = LAF_Robot()
+
+robot.robotcontroller.goto(A0[1])
+robot.robotcontroller.goto(A1[1])
+robot.robotcontroller.goto(B0[1])
+robot.robotcontroller.goto(B1[1])

@@ -1,6 +1,11 @@
+from statistics import mode
 from Detector.Detector import Detector
 from MongoController.MongoController import MongoController
 from RobotController.robotconrtoller import Robot_Controller
+from Camera.Camera import Camera
+from Similarity.Similarity import Similarity
+from Telegram_Manager.Alerter import Alerter
+
 from compare import *
 import threading
 import asyncio
@@ -17,20 +22,23 @@ B1 = ["B1",(6.456136703491211, 5.444826602935791, -0.8250911235809326, 0.5649996
 # Point_B = (3.814,6.426,0,1)
 # Point_C = (6.541,5.683,0,1)
 
-CAMERA_IP = ""
-CAMERA_USER = ""
-CAMERA_PW = ""
-CAMERA_PIC = ""
+# CAMERA_IP = ""
+# CAMERA_USER = ""
+# CAMERA_PW = ""
+# CAMERA_PIC = ""
 
 PATROL_PATH = [A0, A1, B0, B1]
 ###################################################################################
 
 
 class LAF_Robot():
-    def __init__(self, start_idx=0, enable_t = True):
+    def __init__(self, start_idx=3, enable_t = True):
         self.detector = Detector()
         self.dbcontroller = MongoController()
         self.robotcontroller = Robot_Controller()
+        self.camera = Camera()
+        self.sim = Similarity()
+        self.alerter = Alerter()
 
         self.patrol_path = PATROL_PATH
         self.current_idx = start_idx
@@ -57,12 +65,12 @@ class LAF_Robot():
                 self.mode = 2
                 pt = self.cur_pt()
 
-                oblist1 = self.controller.queryFromDbDirectionName("A", "A0")
+                oblist1 = self.controller.queryFromDbDirectionName(pt[0][0], pt[0])
 
                 ##############################################
-                oblist2 = self.detecter.scanImg(CAMERA_PIC)
+                oblist2 = self.detecter.scanImg(self.camera.getimg())
                 sleep(2)
-                oblist3 = self.detecter.scanImg(CAMERA_PIC)
+                oblist3 = self.detecter.scanImg(self.camera.getimg())
                 ##############################################
 
                 findstationaryobj(oblist2, oblist3)
@@ -71,6 +79,11 @@ class LAF_Robot():
 
                 if len(report_list):    #not empty
                     #report
+                    print("\nREPORT!!!!!")
+                    print(report_list)
+                    print("End!!!!!\n")
+                    for item in report_list:
+                        self.alerter.sendToLog(self, item["full_img"], item["name"], pt[0][0], pt[0][1], item["time"])
                     pass
 
                 self.controller.updateData(pt[0][0],pt[0], oblist1)
@@ -89,8 +102,17 @@ class LAF_Robot():
         while self.enable_t: 
             if (self.robotcontroller.moving) and (self.mode == 1):
                 # SCAN ROAD
-                sleep(0.1)
-            
+                sleep(2)
+                oblist = self.detecter.scanImg(self.camera.getimg(), mode = 1)
+                if len(oblist):
+                    print("\nREPORT!!!!!")
+                    print(oblist)
+                    print("End!!!!!\n")
+                    pt = self.cur_pt()
+                    for item in oblist:
+                        self.alerter.sendToLog(self, item["full_img"], item["name"], pt[0][0], pt[0][1], item["time"])
+                    sleep(10)
+
             else:
                 sleep(0.1)
                 continue
@@ -108,11 +130,15 @@ class LAF_Robot():
         pass
 
     def init_database(self):
-        self.controller.createNewCheckpoint("A", 1.446, 7.002, [(0,1)])
+        self.controller.createNewCheckpoint("A", A0[1][0], A0[1][1], [(A0[1][2],A0[1][3]),(A1[1][2],A1[1][3])])
+        self.controller.createNewCheckpoint("B", B0[1][0], B0[1][1], [(B0[1][2],B0[1][3]),(B1[1][2],B1[1][3])])
+        
 
 robot = LAF_Robot()
 
-robot.robotcontroller.goto(A0[1])
-robot.robotcontroller.goto(A1[1])
-robot.robotcontroller.goto(B0[1])
-robot.robotcontroller.goto(B1[1])
+robot.start_patrol()
+# robot.t_start_scan_road()
+# robot.robotcontroller.goto(A0[1])
+# robot.robotcontroller.goto(A1[1])
+# robot.robotcontroller.goto(B0[1])
+# robot.robotcontroller.goto(B1[1])

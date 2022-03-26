@@ -6,7 +6,8 @@ from datetime import datetime
 
 MODEL = "yolov5s"
 
-FILTER = ["suitcase", "cell phone", "backpack", "handbag"]
+FILTER1 = ["cell phone"]
+FILTER2 = ["suitcase", "backpack", "handbag"]
 
 class Detector:
     def __init__(self, model = MODEL):
@@ -23,6 +24,7 @@ class Detector:
                 img_path,
                 showImg = False,
                 filter = True,
+                mode = 2,
                 showResult = False,
                 saveImg = True,
                 saveCrop = True,
@@ -38,6 +40,10 @@ class Detector:
         objectlist = txt_results.to_dict(orient='records')
 
         if filter:
+            if (mode == 1):
+                FILTER = FILTER1
+            else:
+                FILTER = FILTER2
             for obj in reversed(objectlist):
                 if not (obj["name"] in FILTER):
                     objectlist.remove(obj)

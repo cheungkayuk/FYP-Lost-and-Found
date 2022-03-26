@@ -1,7 +1,7 @@
-from Detector.Detector import Detector
-from MongoController.MongoController import MongoController
+# from Detector.Detector import Detector
+# from MongoController.MongoController import MongoController
 from Similarity.Similarity import Similarity
-from Telegram_Manager.Alerter import Alerter
+# from Telegram_Manager.Alerter import Alerter
 
 import time
 
@@ -22,7 +22,7 @@ def iou_cal(box1, box2):
     iou = inter / union
     return iou
 
-def compare2scene(scene1, scene2, sim_method = "ssim"):
+def compare2scene(scene1, scene2, sim_method = "all"):
     newlist = [0] * len(scene2)
 
     report_list = []
@@ -67,7 +67,7 @@ def compare2scene(scene1, scene2, sim_method = "ssim"):
 
     return report_list
 
-def findstationaryobj(scene1, scene2, sim_method = "ssim"):
+def findstationaryobj(scene1, scene2, sim_method = "all"):
     for scene1obj in reversed(scene1):
         match = False
         for i,scene2obj in enumerate(scene2):

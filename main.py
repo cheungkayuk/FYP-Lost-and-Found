@@ -3,7 +3,7 @@ from Detector.Detector import Detector
 from MongoController.MongoController import MongoController
 from RobotController.robotconrtoller import Robot_Controller
 from Camera.Camera import Camera
-from Similarity.Similarity import Similarity
+# from Similarity.Similarity import Similarity
 from Telegram_Manager.Alerter import Alerter
 
 from compare import *
@@ -37,7 +37,7 @@ class LAF_Robot():
         self.dbcontroller = MongoController()
         self.robotcontroller = Robot_Controller()
         self.camera = Camera()
-        self.sim = Similarity()
+        # self.sim = Similarity()
         self.alerter = Alerter()
 
         self.patrol_path = PATROL_PATH

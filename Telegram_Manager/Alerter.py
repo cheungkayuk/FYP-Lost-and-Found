@@ -1,4 +1,5 @@
 # importing all required libraries
+from sys import intern
 from time import strftime
 from time import sleep
 import telebot
@@ -29,7 +30,7 @@ RESEND_NUM = 5
 
 class Alerter:
     def __init__(self, Receiver = {'api_id' : api_id, 'api_hash' : api_hash, 'token' : token, 'channel_id' : channel_id, 'phone' : phone}
-    , session_name = username, map_only = False):
+    , session_name = username, map_only = False, internet = False):
         #app info
         self.api_id = Receiver['api_id']
         self.api_hash = Receiver['api_hash']
@@ -39,8 +40,9 @@ class Alerter:
         self.phone = Receiver['phone']
 
     #####################################################################
-        try:
-            self.receiver = PeerChannel(self.channel_id)
+        if internet:
+            try:
+                self.receiver = PeerChannel(self.channel_id)
 
             # creating a telegram session and assigning
             # it to a variable client
@@ -58,30 +60,30 @@ class Alerter:
                 
         #         # signing in the client
         #         self.client.sign_in(self.phone, input('Enter the code: '))
-        except:
-            raise Exception
+            except:
+                raise Exception
 
-        self.session_name = session_name
-        self.on = True
-        self.error = False    
-        self.q = queue.Queue()
-        self.t = threading.Thread(target=self._sender)
-        self.t.daemon = True
+            self.session_name = session_name
+            self.on = True
+            self.error = False    
+            self.q = queue.Queue()
+            self.t = threading.Thread(target=self._sender)
+            self.t.daemon = True
 
-        self.client = TelegramClient(self.session_name, self.api_id, self.api_hash)
-        try:
-            self.client.connect()
-            if not self.client.is_user_authorized():
-            
-                self.client.send_code_request(self.phone)
+            self.client = TelegramClient(self.session_name, self.api_id, self.api_hash)
+            try:
+                self.client.connect()
+                if not self.client.is_user_authorized():
                 
-                # signing in the client
-                self.client.sign_in(self.phone, input('Enter the code: '))
-        except:
-            self.error = True
-            self.on = False
-            self.client.disconnect()
-            raise Exception
+                    self.client.send_code_request(self.phone)
+                    
+                    # signing in the client
+                    self.client.sign_in(self.phone, input('Enter the code: '))
+            except:
+                self.error = True
+                self.on = False
+                self.client.disconnect()
+                raise Exception
 
     def _sender(self):
         print("_sender started\n")

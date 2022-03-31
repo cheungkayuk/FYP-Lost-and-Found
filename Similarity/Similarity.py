@@ -17,7 +17,7 @@ class Similarity:
         image2 = cv2.resize(image2, (5000, 5000))            
         image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
         image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
-        s = ssim(image1, image2, multichannel=True)
+        s = ssim(image1, image2)     
         return s
     
     def dhash(self, image1, image2):
@@ -55,7 +55,7 @@ class Similarity:
 
         elif method == "dhash":
             s_dhash = self.dhash(image1, image2)
-            if self.sim_compare(s_dash, threshold2):
+            if self.sim_compare(s_dhash, threshold2):
                 return True,s_dhash
             return False,s_dhash
 
@@ -67,10 +67,10 @@ class Similarity:
 
         elif method == "all":
             s_ssim = self.ssim_sim(image1, image2)
-            s_dhash = self.dhash(image1, image2)    
+            s_dhash = self.dhash(image1, image2) 
             s_whash = self.whash(image1, image2)
-            if sum(self.sim_compare(s_ssim, threshold1), self.sim_compare(s_dash, threshold2), self.sim_compare(s_whash, threshold3)) >= 3:
-                return True,s_ssim,s_dhash,s_whash
+            if sum([self.sim_compare(s_ssim, threshold1), self.sim_compare(s_dhash, threshold2), self.sim_compare(s_whash, threshold3)]) >= 3:
+                 return True,s_ssim,s_dhash,s_whash
             return False,s_ssim,s_dhash,s_whash
 
 # from Similarity import Similarity

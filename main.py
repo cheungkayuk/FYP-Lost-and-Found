@@ -38,7 +38,7 @@ class LAF_Robot():
         self.robotcontroller = Robot_Controller()
         self.camera = Camera()
         # self.sim = Similarity()
-        self.alerter = Alerter()
+        self.alerter = Alerter(internet = False)
 
         self.patrol_path = PATROL_PATH
         self.current_idx = start_idx
@@ -65,12 +65,12 @@ class LAF_Robot():
                 self.mode = 2
                 pt = self.cur_pt()
 
-                oblist1 = self.controller.queryFromDbDirectionName(pt[0][0], pt[0])
+                oblist1 = self.dbcontroller.queryFromDbDirectionName(pt[0][0], pt[0])
 
                 ##############################################
-                oblist2 = self.detecter.scanImg(self.camera.getimg())
+                oblist2 = self.detector.scanImg(self.camera.getimg())
                 sleep(2)
-                oblist3 = self.detecter.scanImg(self.camera.getimg())
+                oblist3 = self.detector.scanImg(self.camera.getimg())
                 ##############################################
 
                 findstationaryobj(oblist2, oblist3)
@@ -83,10 +83,10 @@ class LAF_Robot():
                     print(report_list)
                     print("End!!!!!\n")
                     for item in report_list:
-                        self.alerter.sendToLog(self, item["full_img"], item["name"], pt[0][0], pt[0][1], item["time"])
+                        self.alerter.sendToLog(item["full_img"], item["name"], pt[0][0], pt[0][1], item["time"])
                     pass
 
-                self.controller.updateData(pt[0][0],pt[0], oblist1)
+                self.dbcontroller.updateData(pt[0][0],pt[0], oblist1)
 
                 # SCAN CHECKPOINT
             else:
@@ -124,21 +124,20 @@ class LAF_Robot():
         self.enable_t = False
 
     def cur_pt(self):
-        return self.patrol_path(self.current_idx)
+        return self.patrol_path[self.current_idx]
 
     def get_img(self):
         pass
 
     def init_database(self):
-        self.controller.createNewCheckpoint("A", A0[1][0], A0[1][1], [(A0[1][2],A0[1][3]),(A1[1][2],A1[1][3])])
-        self.controller.createNewCheckpoint("B", B0[1][0], B0[1][1], [(B0[1][2],B0[1][3]),(B1[1][2],B1[1][3])])
+        self.dbcontroller.createNewCheckpoint("A", A0[1][0], A0[1][1], [(A0[1][2],A0[1][3]),(A1[1][2],A1[1][3])])
+        self.dbcontroller.createNewCheckpoint("B", B0[1][0], B0[1][1], [(B0[1][2],B0[1][3]),(B1[1][2],B1[1][3])])
         
 
-robot = LAF_Robot()
-
-robot.start_patrol()
+# robot = LAF_Robot()
+# robot.alerter.sendToLog("imgFileName", "className", "checkpoint", "direction", "detectedTime")
+# robot.start_patrol()
+# robot.init_database()
 # robot.t_start_scan_road()
-# robot.robotcontroller.goto(A0[1])
-# robot.robotcontroller.goto(A1[1])
-# robot.robotcontroller.goto(B0[1])
-# robot.robotcontroller.goto(B1[1])
+# a = Alerter(internet=True)
+# a.readAndSendFromLog()

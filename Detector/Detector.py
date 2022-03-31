@@ -1,4 +1,6 @@
+import imghdr
 from numpy import source
+from numpy import asarray
 import torch
 import cv2
 import os
@@ -31,6 +33,7 @@ class Detector:
                 savePath = "Results"):
 
         self.working = True
+        
         results = self.model(img_path)
         txt_results = results.pandas().xyxy[0]
 
@@ -66,7 +69,9 @@ class Detector:
             Detector.id+=1
 
         if saveCrop:
-            img = cv2.imread(img_path)
+            # img = cv2.imread(saveDir + fileName)
+            img = asarray(img_path)
+            # print(type(img))
             saveDir = savePath + "/Crops"
             if not os.path.exists(saveDir):
                 os.makedirs(saveDir)

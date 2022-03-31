@@ -13,8 +13,8 @@ class MongoController():
 
     # setup connection to mongodb
     # for testing purpose with no db, pls comment out the below 3 lines of code as well self.db.xxx in line 29, 39 and 78
-    # cluster = 'mongodb://localhost:27017'
-    cluster = 'mongodb+srv://admin:admin@cluster0.gdbdm.mongodb.net/sample?retryWrites=true&w=majority'
+    cluster = 'mongodb://localhost:27017'
+    # cluster = 'mongodb+srv://admin:admin@cluster0.gdbdm.mongodb.net/sample?retryWrites=true&w=majority'
     client = MongoClient(cluster)
     db = client.sample
     

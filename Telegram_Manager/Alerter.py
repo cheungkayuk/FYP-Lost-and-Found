@@ -142,7 +142,7 @@ class Alerter:
         now = datetime.datetime.now()
         currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
         # log to a file called message.log
-        logging.basicConfig(filename='message.log', format=Log_Format, level=logging.INFO)
+        logging.basicConfig(filename='C:\\Users\\user\\Desktop\\FYP-Lost-and-Found\\message.log', format=Log_Format, level=logging.INFO)
         logger = logging.getLogger()
         
         content = "|"+str(currentTime)+"|"+imgFileName+","+className+","+checkpoint+","+direction+","+str(detectedTime)

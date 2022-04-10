@@ -7,9 +7,11 @@ images = sorted(os.listdir(folder_path))
 print(len(images))
 input()
 
-first10000 = images[:15000]
+split_length = 15000
 
-after10000 = images[15000:]
+first10000 = images[:split_length]
+
+after10000 = images[split_length:]
 
 print(len(first10000), len(after10000))
 input()

@@ -71,7 +71,7 @@ print("\nClasses to download: ", classes, end = "\n\n")
 
 makeDirectory('downloaded_images')
 
-coco = COCO('instances_train2017.json')
+coco = COCO('instances_val2017.json')
 cats = coco.loadCats(coco.getCatIds())
 nms=[cat['name'] for cat in cats]
 

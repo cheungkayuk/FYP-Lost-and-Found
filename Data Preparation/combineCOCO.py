@@ -1,7 +1,7 @@
 import os
 import shutil
 
-main_folder = 'downloaded_images'
+main_folder = 'downloaded_images_val/downloaded_images'
 
 allClasses = []
 for item in os.listdir(main_folder):
@@ -25,6 +25,7 @@ for item in allClasses:
             seen.add(x)
 
 dupes = list(set(dupes))
+print(len(dupes))
 
 allClassesFolder = main_folder + '/allClasses'
 if not os.path.exists(allClassesFolder):

@@ -1,0 +1,25 @@
+item {
+    name: "backpack",
+    id: 0,
+    display_name: "backpack"
+}
+item {
+    name: "cell-phone",
+    id: 1,
+    display_name: "cell-phone"
+}
+item {
+    name: "handbag",
+    id: 2,
+    display_name: "handbag"
+}
+item {
+    name: "suitcase",
+    id: 3,
+    display_name: "suitcase"
+}
+item {
+    name: "wallet",
+    id: 4,
+    display_name: "wallet"
+}

@@ -84,7 +84,7 @@ threads = []
 
 # Creating threads for every class provided.
 for i in range(len(classes)):
-    t = threading.Thread(target=getImagesFromClassName, args=(classes[i], i+1, )) 
+    t = threading.Thread(target=getImagesFromClassName, args=(classes[i], i, )) 
     threads.append(t)
     
 for t in threads:

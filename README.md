@@ -12,3 +12,9 @@ Chan Pik Sui Briony 3035606657
 Leung Joyce Hoi Ying 3035569720
 Siu Choi Hei Daniel 3035566871
 
+!pip install imagehash
+!pip install serial
+!pip install telebot
+!pip install telethon
+!pip install torch
+!pip install torchvision

@@ -1,6 +1,6 @@
 # FYP-Lost-and-Found
 
-This is a source code folder for HKU FYP 2021~2022 Group FYP 21021
+This is a source code folder for HKU FYP 2021~2022 Group FYP 21021 <br />
 
 Topic : <br />
 Smart Airport <br />
@@ -18,3 +18,6 @@ Siu Choi Hei Daniel 3035566871 <br />
 !pip install telethon <br />
 !pip install torch <br />
 !pip install torchvision <br />
+!pip install opencv-python <br />
+!pip install numpy <br />
+!pip install micropython-imghdr <br />

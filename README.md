@@ -1,6 +1,6 @@
 # FYP-Lost-and-Found
 
-This is a source code folder for HKU FYP 2021~2022 Group 18
+This is a source code folder for HKU FYP 2021~2022 Group FYP 21021
 
 Topic :
 Smart Airport

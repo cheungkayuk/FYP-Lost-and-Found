@@ -45,7 +45,7 @@ class Similarity:
             return True
         return False
 
-    def similarity (self, image1, image2, method = "all", threshold1=0.85, threshold2=0.8, threshold3=0.8):
+    def similarity (self, image1, image2, method = "all", threshold1=0.85, threshold2=0.8, threshold3=0.8, threshold_sum=3):
         
         if method == "ssim":
             s_ssim = self.ssim_sim(image1, image2)
@@ -69,7 +69,7 @@ class Similarity:
             s_ssim = self.ssim_sim(image1, image2)
             s_dhash = self.dhash(image1, image2) 
             s_whash = self.whash(image1, image2)
-            if sum([self.sim_compare(s_ssim, threshold1), self.sim_compare(s_dhash, threshold2), self.sim_compare(s_whash, threshold3)]) >= 3:
+            if sum([self.sim_compare(s_ssim, threshold1), self.sim_compare(s_dhash, threshold2), self.sim_compare(s_whash, threshold3)]) >= threshold_sum:
                  return True,s_ssim,s_dhash,s_whash
             return False,s_ssim,s_dhash,s_whash
 

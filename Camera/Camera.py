@@ -16,6 +16,7 @@ class Camera:
         except:
             print("Error in Camera: fail to connect the camera")
 
+    # get the current frame captured by the camera
     def getimg(self):
         img =  self.cam.Streaming.channels[101].picture(method='get', type='opaque_data')
         return Image.open(BytesIO(img.content))

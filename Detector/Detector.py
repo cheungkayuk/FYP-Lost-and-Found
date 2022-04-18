@@ -35,7 +35,7 @@ class Detector:
     #     img_path: image path for object detection
     #     showImg: whether to show the result image, default = False,
     #     filter: whether to filter the classes, default = True,
-    #     mode: which mode for the robot to run, 1st class objects: mode = 1, 2nd class objects: mode = 2,
+    #     mode: which mode the robot is running, mode = 1: filter 1st class objects, mode = 2: filter 2nd class objects,
     #                                            default = 2,
     #     showResult: whether to show the result (list of detected objects), default = False,
     #     saveImg: wheather to save images, filename contains the current time, default = True,

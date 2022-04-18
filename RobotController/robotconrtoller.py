@@ -28,6 +28,7 @@ def hextodec(hexinput):
     # print(query)
     # return(struct.unpack('<f', query))
 
+# transfer dex to hex
 def dectohex(decinput):
     hexnumber = ( hex(struct.unpack('<I', struct.pack('>f',decinput))[0]) )
     hexstring = str(hexnumber)[2::]
@@ -35,9 +36,11 @@ def dectohex(decinput):
         hexstring = "00000000"[0:8-len(hexstring)] + hexstring
     return (hexstring)
 
+# transfer byte to dec 
 def bytetodec(byteinput):
     return (struct.unpack('<f', byteinput))
 
+# transfer dec to byte 
 def dectobyte(decinput):
     hexinput = dectohex(decinput)
     return bytes.fromhex(hexinput)

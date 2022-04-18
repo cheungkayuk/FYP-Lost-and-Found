@@ -7,6 +7,9 @@ images = sorted(os.listdir(folder_path))
 print(len(images))
 input()
 
+# split the images into no more than 10000 images per folder
+# Roboflow only allows uploading no more than 10000 images each time.
+
 split_length = 15000
 
 first10000 = images[:split_length]

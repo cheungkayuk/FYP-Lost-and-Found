@@ -2,21 +2,27 @@ import json
 import os
 import shutil
 
-
+# the json filename
 json_file = "image_annotation_all.json"
 
 colour = (255, 0, 0)
 thickness = 1
 
+# open the json file
 f = open(json_file)
 
+# load json file
 data = json.load(f)
 
+# Create a folder for allPatches to store the filtered dataset
 allPatches = 'AllPatches'
 
 if not os.path.exists(allPatches):
     os.makedirs(allPatches)
 
+# create the txt file to include annotations in each image in YOLOv5 format
+# copy the image to the allPatches folder
+# move the created txt to allPatches
 for image_id in data:
     image = data.get(image_id)
     if(image['file_name']):

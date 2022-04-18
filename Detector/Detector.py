@@ -30,7 +30,7 @@ class Detector:
             print("Error in Detecter: fail to load model")
         Detector.id = 1
 
-    #return list of records
+    # Perform object detection in an image
     # Input:
     #     img_path: image path for object detection
     #     showImg: whether to show the result image, default = False,
@@ -42,6 +42,8 @@ class Detector:
     #     saveCrop whether to save crops, filename contains the current time_Director.id,
     #                                     default = True,
     #     savePath: the directory path for saving, default = "Results"
+    # Output: return list of records containing the following information of each detected object
+    #           {'class', 'confidence', 'img_path', 'name', 'obj_id', 'time', 'xmax', 'xmin', 'ymax', 'ymin' (bounding box)}
     def scanImg(self,
                 img_path,
                 showImg = False,

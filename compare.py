@@ -11,6 +11,7 @@ IOU_1_SCENE = 0.85
 
 s = Similarity()
 
+# calculate iou of two bounding box
 def iou_cal(box1, box2):
     # box:[x1,y2,x2,y2]-->[xmin, ymin, xmax, ymax]
     area_box1 = ((box1["xmax"] - box1["xmin"] + 1) * (box1["ymax"] - box1["ymin"] + 1))
@@ -22,6 +23,9 @@ def iou_cal(box1, box2):
     iou = inter / union
     return iou
 
+# compare the object in 2 scenes by calculating IoU and Similarity
+# input: object list for 2 scenes
+# output: a list containing the objects that should be reported
 def compare2scene(scene1, scene2, sim_method = "all"):
     newlist = [0] * len(scene2)
 
@@ -67,6 +71,9 @@ def compare2scene(scene1, scene2, sim_method = "all"):
 
     return report_list
 
+# find the stationary object by calculating IoU and Similarity
+# input: scene1 & scene2 are consecutive frames which contain list of detected object
+# output: return nothing, the stationary object list stored in scene1
 def findstationaryobj(scene1, scene2, sim_method = "all"):
     for scene1obj in reversed(scene1):
         match = False
@@ -99,7 +106,7 @@ def findstationaryobj(scene1, scene2, sim_method = "all"):
 
 # obj = oblist1[0]
 
-# alerter.sendToLog(obj["full_img"], obj["name"], "A1", "gg", obj["time"])
+# alerter.sendToLog(obj["full_img"], obj["name"], "A", "0", obj["time"])
 # alerter.readAndSendFromLog()
 
 #///////////////////////////////////////////////////////////////////

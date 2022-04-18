@@ -20,6 +20,7 @@ FILTER2 = ["suitcase", "backpack", "handbag"]
 class Detector:
     # Initialise the model (load the model weights)
     # Assign Director.id = 1 for saving images
+    # Parameter: model: the object detection model
     def __init__(self, model = MODEL):
         self.working = False
         try:

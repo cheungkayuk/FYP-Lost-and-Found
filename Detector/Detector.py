@@ -6,12 +6,20 @@ import cv2
 import os
 from datetime import datetime
 
+# our selected pretrained model
 MODEL = "yolov5s"
 
+# 1st class objects
+# Since YOLOv5s does not include wallet, 'wallet' is not included in FILTER1
 FILTER1 = ["cell phone"]
+
+# 2nd class objects
 FILTER2 = ["suitcase", "backpack", "handbag"]
 
+# Claas Detector
 class Detector:
+    # Initialise the model (load the model weights)
+    # Assign Director.id = 1 for saving images
     def __init__(self, model = MODEL):
         self.working = False
         try:
@@ -22,6 +30,17 @@ class Detector:
         Detector.id = 1
 
     #return list of records
+    # Input:
+    #     img_path: image path for object detection
+    #     showImg: whether to show the result image, default = False,
+    #     filter: whether to filter the classes, default = True,
+    #     mode: which mode for the robot to run, 1st class objects: mode = 1, 2nd class objects: mode = 2,
+    #                                            default = 2,
+    #     showResult: whether to show the result (list of detected objects), default = False,
+    #     saveImg: wheather to save images, filename contains the current time, default = True,
+    #     saveCrop whether to save crops, filename contains the current time_Director.id,
+    #                                     default = True,
+    #     savePath: the directory path for saving, default = "Results"
     def scanImg(self,
                 img_path,
                 showImg = False,

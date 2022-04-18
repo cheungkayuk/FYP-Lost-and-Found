@@ -5,11 +5,24 @@ from PIL import Image
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import mean_squared_error as mse
 
+# Class Similarity
 class Similarity:
+    # calculate similarity of 2 images (image1 and image2)
+    # Input:
+    #       hash1: hash of image1
+    #       hash2: hash of image2
+    # Output:
+    #       sim: the similarity of 2 images in the value of 0-1
     def cal_similar(self, hash1, hash2):
         sim = 1 - (hash1 - hash2) / len(hash1.hash) ** 2
         return sim
 
+    # calculate the ssim of 2 images (image1 and image2)
+    # Input:
+    #       image1: file path of image1
+    #       image2: file path of image2
+    # Output:
+    #       s: the similarity of 2 images in the value of 0-1 regarding SSIM
     def ssim_sim(self, image1, image2):
         image1 = cv2.imread(image1)
         image2 = cv2.imread(image2)
@@ -20,6 +33,12 @@ class Similarity:
         s = ssim(image1, image2)     
         return s
     
+    # calculate the similarity using dhash
+    # Input:
+    #       image1: file path of image1
+    #       image2: file path of image2
+    # Output:
+    #       s: the similarity of 2 images in the value of 0-1 regarding dhash
     def dhash(self, image1, image2):
         hash_size = 8
         image1 = Image.open(image1)
@@ -29,6 +48,13 @@ class Similarity:
         s = self.cal_similar(dhash1, dhash2)
         return s
 
+    # calculate the similarity using whash
+    # mode = 'db4'
+    # Input:
+    #       image1: file path of image1
+    #       image2: file path of image2
+    # Output:
+    #       s: the similarity of 2 images in the value of 0-1 regarding whash
     def whash(self, image1, image2):
         hash_size = 8
         mode = 'db4'
@@ -40,11 +66,34 @@ class Similarity:
         s = self.cal_similar(whash1, whash2)
         return s
     
+    # Compare if the calculated similarity is greater than the threshold
+    # Input:
+    #       s: the calculated similarity
+    #       threshold: the similarity threshold
+    # Output:
+    #       If s > threshold, return True
+    #       Otherwise, return False
     def sim_compare(self, s, threshold):
         if s > threshold:
             return True
         return False
 
+    # Compare the similarity of image1 and image2 (with method = 'ssim', 'dhash', 'whash', 'all')
+    # Input:
+    #       image1: the file path of image1
+    #       image2: the file path of image2
+    #       method: which method to use for the comparison, method = ['ssim', 'dhash', 'whash', 'all'], default = "all", 
+    #       threshold1: the threshold for SSIM method, default = 0.85, 
+    #       threshold2: the threshold for dhash method, default = 0.8, 
+    #       threshold3: the threshold for whash method, default = 0.8, 
+    #       threshold_sum: the threshold for all method (count the number of True), default = 3
+    #                      i.e. return True in all methods ('ssim', 'dhash', and 'whash')
+    # Output:
+    # A tuple of (boolean, similarity)
+    #       If s >= threshold, return True
+    #       Otherwise, return False
+    #       similarity: method = 'ssim', 'dhash' or 'whash': the calculated similarity
+    #                   method = 'all': the calculated similarities from 'ssim', 'dhash' and 'whash' method
     def similarity (self, image1, image2, method = "all", threshold1=0.85, threshold2=0.8, threshold3=0.8, threshold_sum=3):
         
         if method == "ssim":

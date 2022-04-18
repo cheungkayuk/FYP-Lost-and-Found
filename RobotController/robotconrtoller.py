@@ -19,12 +19,10 @@ SERIAL_BAUD = 115200
 
 GET_LOCATION = b'Uw\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 
-Point_A = (1.446,7.002,0,1)
-Point_B = (3.814,6.426,0,1)
-Point_C = (6.541,5.683,0,1)
 
 #///////////////////////////////////////////////////////////////////////////////////
 
+# transfer hex to dec 
 def hextodec(hexinput):
     return struct.unpack('<f', bytes.fromhex(hexinput))[0]
     # print(query)
@@ -50,7 +48,8 @@ class Robot_Controller:
     def __init__(self):
         self.ser = serial.Serial(SERIAL_PORT, SERIAL_BAUD, timeout=5)
         self.moving = False
-
+    
+    # get current location of the robot
     def getlocation(self):
         self.ser.write(GET_LOCATION)
         print("Get location...")
@@ -72,6 +71,10 @@ class Robot_Controller:
         th = th*180/math.pi
         return [x,y,a,w,th]
 
+    # instruct to robot to target [checkpoint direction]
+    # input: (x, y, w, z)
+    # x,y: coordinate, w,z: orientation
+    # output: boolean
     def goto(self, point):
         self.moving = True
 
@@ -97,6 +100,8 @@ class Robot_Controller:
         self.ser.close()
     #///////////////////////////////////////////////////////////////////////////////////
     #///////////////////////////////////////////////////////////////////////////////////
+
+# sample code    
 
 # print("get location...")
 # serBarCode = ser.read(30)

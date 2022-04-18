@@ -85,6 +85,7 @@ class Alerter:
                 self.client.disconnect()
                 raise Exception
 
+    # a _sender thread to handle sequence of report
     def _sender(self):
         print("_sender started\n")
         new_loop = asyncio.new_event_loop()
@@ -120,6 +121,7 @@ class Alerter:
                     print(f"Fail to send message for {i} times! \n\n")
                     self.disconnect()
 
+    # start _sender
     def startsender(self):
         self.t.start()
 
@@ -127,12 +129,15 @@ class Alerter:
         print("_sender is killed")
         self.on = False
 
+    # add message/img to _sender
     def wait_for_send(self, obj):
         self.q.put(obj)
     
+    # send image directly
     def send_img(self, img_path):
         self.client.send_file(self.receiver, img_path)
 
+    # send msg directly
     def send_msg(self, msg):
         self.client(SendMessageRequest(self.receiver, msg))
 

@@ -4,6 +4,9 @@ import os
 import sys
 import threading
 
+# Create a directory
+# Input: 
+#       dirName: name of the directory
 def makeDirectory(dirName):
     try:
         os.mkdir(dirName)
@@ -11,6 +14,10 @@ def makeDirectory(dirName):
     except:
         pass
 
+# get the filtered images from target class names
+# Input:
+#       className: the target class names for filtering
+#       classIndex: class index (id in lost_classes.pbtxt)
 def getImagesFromClassName(className, classIndex):
     makeDirectory(f'downloaded_images/{className}')
     catIds = coco.getCatIds(catNms=[className])

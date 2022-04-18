@@ -19,15 +19,15 @@ Siu Choi Hei Daniel 3035566871 <br />
 
 You can <code> !pip install -r requirements.txt </code> instead.
 
-    !pip install imagehash <br />
-    !pip install serial <br />
-    !pip install telebot <br />
-    !pip install telethon <br />
-    !pip install torch <br />
-    !pip install torchvision <br />
-    !pip install opencv-python <br />
-    !pip install numpy <br />
-    !pip install micropython-imghdr <br />
+    !pip install imagehash 
+    !pip install serial
+    !pip install telebot 
+    !pip install telethon 
+    !pip install torch 
+    !pip install torchvision 
+    !pip install opencv-python 
+    !pip install numpy 
+    !pip install micropython-imghdr
 
 ## 2. Run the Lost and Found system (main program) <br />
 At the command prompt of a robot, type <code>python main.py</code> to run the Lost and Found system.

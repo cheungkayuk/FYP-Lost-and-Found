@@ -53,6 +53,8 @@ class LAF_Robot():
         # connect to camera
         # self.cam = Client(f"http://{CAMERA_IP}", CAMERA_USER, CAMERA_PW)
 
+    # a loop of patrolling from checkpoint to checkpoint
+    # scan 2nd class object(suitcase, backpack etc) in each checkpoint-direction and report 
     def start_patrol(self):
         while(self.keep_patrol):
             target_idx = (self.current_idx + 1)%len(self.patrol_path)
@@ -92,7 +94,8 @@ class LAF_Robot():
             else:
                 sleep(5)
                 continue
-        
+    
+    # thread to scan 1st class objects(phone, wallet etc) object during patrol and report
     def t_scan_road(self):
         print("_scan_road started\n")
         new_loop = asyncio.new_event_loop()
@@ -119,18 +122,22 @@ class LAF_Robot():
                 sleep(0.1)
                 continue
 
+    # start thread
     def t_start_scan_road(self):
         self.t.start()
         
+    # kill thread
     def t_kill_t(self):
         self.enable_t = False
 
+    # get current point
     def cur_pt(self):
         return self.patrol_path[self.current_idx]
 
     def get_img(self):
         pass
 
+    # initialize checkpoint infomation in database
     def init_database(self):
         self.dbcontroller.createNewCheckpoint("A", A0[1][0], A0[1][1], [(A0[1][2],A0[1][3]),(A1[1][2],A1[1][3])])
         self.dbcontroller.createNewCheckpoint("B", B0[1][0], B0[1][1], [(B0[1][2],B0[1][3]),(B1[1][2],B1[1][3])])

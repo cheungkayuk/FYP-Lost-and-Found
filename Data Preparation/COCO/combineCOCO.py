@@ -1,8 +1,10 @@
 import os
 import shutil
 
+# the main folder that contains COCO filtered dataset
 main_folder = 'downloaded_images_val/downloaded_images'
 
+# get a list of filenames in main folder without file extension
 allClasses = []
 for item in os.listdir(main_folder):
     if item == 'allClasses':
@@ -16,6 +18,8 @@ seen = set()
 dupes = []
 uniq = []
 
+# find the duplicated filenames (images with at least 2 of the target classes)
+# find all the unique filenames
 for item in allClasses:
     for x in item[1]:
         if x in seen:
@@ -27,10 +31,12 @@ for item in allClasses:
 dupes = list(set(dupes))
 print(len(dupes))
 
+# make a folder 'allClasses'
 allClassesFolder = main_folder + '/allClasses'
 if not os.path.exists(allClassesFolder):
     os.makedirs(allClassesFolder)
 
+# copy unique files (jpg and txt) to 'allClasses'
 for unique in uniq:
     item_folder = main_folder + '/' + unique[0]
     filename = unique[1]
@@ -39,6 +45,7 @@ for unique in uniq:
     shutil.copyfile(src+'.jpg', dst+'.jpg')
     shutil.copyfile(src+'.txt', dst+'.txt')
 
+# combine the anotations for duplicated images (same image but different annotation file with the same name)
 for duplicate in dupes:
     item_folder = main_folder + '/' + duplicate[0]
     filename = duplicate[1]+'.txt'

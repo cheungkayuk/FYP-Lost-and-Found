@@ -69,6 +69,42 @@ body {
   float: right;
 }
 
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
 table.center {
   margin-left: auto;
   margin-right: auto;
@@ -108,6 +144,10 @@ table.center {
   margin: 2px 4px;
   cursor: pointer;
 } 
+
+.processing {
+  background-color: rgb(78, 78, 78);
+}
 
 /* The popup form - hidden by default */
 .status-update-popup {
@@ -177,27 +217,6 @@ table.center {
 
 </style>
 
-<script>
-
-timeoutPeriod = 600000
-
-  function refresh() {
-    window.location.reload();
-  }
-  const refreshInterval = setInterval('refresh()', timeoutPeriod); 
-
-  function openPopup() {
-  document.getElementById("status-update").style.display = "block";
-  clearInterval(refreshInterval);
-  }
-
-  function closePopup() {
-    document.getElementById("status-update").style.display = "none";
-    refreshInterval = setInterval('refresh()', timeoutPeriod);
-  }
-
-</script>
-
 </head>
 <body>
 
@@ -228,54 +247,181 @@ timeoutPeriod = 600000
 </div>
 
 <div style="padding-left:10%">
-    <h2>Unhandled Items</h2>
+  <h2>Items</h2>
 </div>
 
-<table class="center" style="width:80%" id="foundItems">
-  <tr>
-    <th>Item ID</th>
-    <th>Item</th>
-    <th>Checkpoint</th>
-    <th>Direction</th>
-    <th>Detected Time</th>
-    <th>Status</th>
-  </tr>
-  {% for item in item_list %}
-  <tr>
-    <td>{{ item.id }}</td>
-    <td>
-      <a href="{% url 'item-info' item.pk %}">
-        {{ item.classname }}
-      </a>
-    </td>
-    <td>{{ item.checkpoint }}</td>
-    <td>{{ item.direction }}</td>
-    <td>{{ item.detectedTime }}</td>
-    <td>
-      <div  class="buttonPopupContainer">
-        <button class="redButton"  style="position: relative" onclick="openPopup()">
-          {{ item.status }}
-        </button>
-        <div class="status-update-popup" id="status-update">
-          <form action="/action_page.php" class="status-update-container">
-            <h1>Update Status</h1>
-            <button type="button" class="btn">Handled</button>
-            <button type="button" class="btn processing">Processing</button>
-            <button type="button" class="btn cancel" onclick="closePopup()">Cancel</button>
-            <br><br>
-            <label for="optional_note"><b>Note (if any)</b></label>
-            <input type="note" placeholder="Anything special" name="optional_note">
-        
-            <button type="submit">Submit Optional Note</button>
-          </form>
-        </div>
-      </div>
-    </td>
-  {% empty %}
-    <td>No lost and found item yet.</td>
-  {% endfor %}
-  
-</table>
+<div style="padding-left:10%" class="tab">
+  <button style='color:red' class="tablinks" onclick="openStatusTable(event, 'Unhandled')" id="defaultOpen">Unhandled</button>
+  <button class="tablinks" onclick="openStatusTable(event, 'Processing')">Processing</button>
+  <button style='color:green' class="tablinks" onclick="openStatusTable(event, 'Handled')">Handled</button>
+</div>
 
+<div id="Unhandled" class="tabcontent">
+  <table class="center" style="width:80%" id="foundItems">
+    <tr>
+      <th>Item ID</th>
+      <th>Item</th>
+      <th>Checkpoint</th>
+      <th>Direction</th>
+      <th>Detected Time</th>
+      <th>Status</th>
+    </tr>
+    {% for item in Unhandled_item_list %}
+    <tr>
+      <td>{{ item.id }}</td>
+      <td>
+        <a href="{% url 'item-info' item.pk %}">
+          {{ item.classname }}
+        </a>
+      </td>
+      <td>{{ item.checkpoint }}</td>
+      <td>{{ item.direction }}</td>
+      <td>{{ item.detectedTime }}</td>
+      <td>
+        <div  class="buttonPopupContainer">
+          <button class="redButton"  style="position: relative" onclick="openPopup()">
+            {{ item.status }}
+          </button>
+          <div class="status-update-popup" id="status-update">
+            <form action="/action_page.php" class="status-update-container">
+              <h1>Update Status</h1>
+              <button type="button" class="btn">Handled</button>
+              <button type="button" class="btn processing">Processing</button>
+              <button type="button" class="btn cancel" onclick="closePopup()">Cancel</button>
+              <br><br>
+              <label for="optional_note"><b>Note (if any)</b></label>
+              <input type="note" placeholder="Anything special" name="optional_note">
+          
+              <button type="submit">Submit Optional Note</button>
+            </form>
+          </div>
+        </div>
+      </td>
+    {% empty %}
+      <td>No lost and found item yet.</td>
+    {% endfor %}
+    
+  </table>
+</div>
+
+<div id="Processing" class="tabcontent">
+  <table class="center" style="width:80%" id="foundItems">
+    <tr>
+      <th>Item ID</th>
+      <th>Item</th>
+      <th>Checkpoint</th>
+      <th>Direction</th>
+      <th>Detected Time</th>
+      <th>Status</th>
+    </tr>
+    {% for item in Processing_item_list %}
+    <tr>
+      <td>{{ item.id }}</td>
+      <td>
+        <a href="{% url 'item-info' item.pk %}">
+          {{ item.classname }}
+        </a>
+      </td>
+      <td>{{ item.checkpoint }}</td>
+      <td>{{ item.direction }}</td>
+      <td>{{ item.detectedTime }}</td>
+      <td>
+        <div  class="buttonPopupContainer">
+          <button class="redButton processing"  style="position: relative" onclick="openPopup()">
+            {{ item.status }}
+          </button>
+          <div class="status-update-popup" id="status-update">
+            <form action="/action_page.php" class="status-update-container">
+              <h1>Update Status</h1>
+              <button type="button" class="btn">Handled</button>
+              <button type="button" class="btn processing">Processing</button>
+              <button type="button" class="btn cancel" onclick="closePopup()">Cancel</button>
+              <br><br>
+              <label for="optional_note"><b>Note (if any)</b></label>
+              <input type="note" placeholder="Anything special" name="optional_note">
+          
+              <button type="submit">Submit Optional Note</button>
+            </form>
+          </div>
+        </div>
+      </td>
+    {% empty %}
+      <td>No processing lost and found item yet.</td>
+    {% endfor %}
+  </table>
+</div>
+
+<div id="Handled" class="tabcontent">
+  <table class="center" style="width:80%" id="foundItems">
+    <tr>
+      <th>Item ID</th>
+      <th>Item</th>
+      <th>Checkpoint</th>
+      <th>Direction</th>
+      <th>Detected Time</th>
+      <th>Status</th>
+    </tr>
+    {% for item in Handled_item_list %}
+    <tr>
+      <td>{{ item.id }}</td>
+      <td>
+        <a href="{% url 'item-info' item.pk %}">
+          {{ item.classname }}
+        </a>
+      </td>
+      <td>{{ item.checkpoint }}</td>
+      <td>{{ item.direction }}</td>
+      <td>{{ item.detectedTime }}</td>
+      <td>
+        <div style='color:green'>
+          {{ item.status}}
+        </div>
+      </td>
+    {% empty %}
+      <td>No handled lost and found item yet.</td>
+    {% endfor %}
+  </table>
+</div>
+
+
+
+<script>
+  timeoutPeriod = 600000
+
+function refresh() {
+  window.location.reload();
+}
+const refreshInterval = setInterval('refresh()', timeoutPeriod); 
+
+function openPopup() {
+document.getElementById("status-update").style.display = "block";
+clearInterval(refreshInterval);
+}
+
+function closePopup() {
+  document.getElementById("status-update").style.display = "none";
+  refreshInterval = setInterval('refresh()', timeoutPeriod);
+}
+
+function openStatusTable(evt, status) {
+var i, tabcontent, tablinks;
+tabcontent = document.getElementsByClassName("tabcontent");
+for (i = 0; i < tabcontent.length; i++) {
+  tabcontent[i].style.display = "none";
+}
+tablinks = document.getElementsByClassName("tablinks");
+for (i = 0; i < tablinks.length; i++) {
+  tablinks[i].className = tablinks[i].className.replace(" active", "");
+}
+document.getElementById(status).style.display = "block";
+evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+
+</script>
+ 
 </body>
-</html>
+</html> 
+

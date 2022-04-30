@@ -1,50 +1,110 @@
+<!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="tabs_style.css">
-<script>
- function change_tab(id)
- {
-   document.getElementById("page_content").innerHTML=document.getElementById(id+"_desc").innerHTML;
-   document.getElementById("U").className="notselected";
-   document.getElementById("page3").className="notselected";
-   document.getElementById(id).className="selected";
- }
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
 </head>
 <body>
 
-<div id="main_content">
+<h2>Items</h2>
+<p>Click on the buttons inside the tabbed menu:</p>
 
- <li class="selected" id="page1" onclick="change_tab(this.id);">Page1</li>
- <li class="notselected" id="page2" onclick="change_tab(this.id);">Page2</li>
- <li class="notselected" id="page3" onclick="change_tab(this.id);">Page3</li>
- 
- <div class='hidden_desc' id="page1_desc">
-  <h2>Page 1</h2>
-  page 1 Hello this is Page 1 description and this is just a sample text .This is the demo of Multiple Tab In Single Page Using JavaScript and CSS. 
-  Hello this is Page 1 description and this is just a sample text .This is the demo of Multiple Tab In Single Page Using JavaScript and CSS.
-  Hello this is Page 1 description and this is just a sample text .This is the demo of Multiple Tab In Single Page Using JavaScript and CSS.
- </div>
-
- <div class='hidden_desc' id="page2_desc">
-  <h2>Page 2</h2>
-  Hello this is Page 2 description and this is just a sample text .This is the demo of Multiple Tab In Single Page Using JavaScript and CSS.
- </div>
- 
- <div class='hidden_desc' id="page3_desc">
-  <h2>Page 3</h2>
-  Hello this is Page 3 description and this is just a sample text .This is the demo of Multiple Tab In Single Page Using JavaScript and CSS. 
-  Hello this is Page 3 description and this is just a sample text .This is the demo of Multiple Tab In Single Page Using JavaScript and CSS.
- </div>
- 
- <div id="page_content">
-  <h2>Page 1</h2>
-  page_content Hello this is Page 1 description and this is just a sample text .This is the demo of Multiple Tab In Single Page Using JavaScript and CSS. 
-  Hello this is Page 1 description and this is just a sample text .This is the demo of Multiple Tab In Single Page Using JavaScript and CSS.
-  Hello this is Page 1 description and this is just a sample text .This is the demo of Multiple Tab In Single Page Using JavaScript and CSS.
- </div>
- 
+<div style="padding-left:10%" class="tab">
+  <button style='color:red' class="tablinks" onclick="openStatusTable(event, 'Unhandled')" id="defaultOpen">Unhandled</button>
+  <button class="tablinks" onclick="openStatusTable(event, 'Processing')">Processing</button>
+  <button style='color:green' class="tablinks" onclick="openStatusTable(event, 'Handled')">Handled</button>
 </div>
 
+<div id="Unhandled" class="tabcontent">
+  <h3>London</h3>
+  <p>London is the capital city of England.</p>
+</div>
+
+<div id="Processing" class="tabcontent">
+  <h3>Paris</h3>
+  <p>Paris is the capital of France.</p> 
+</div>
+
+<div id="Handled" class="tabcontent">
+  <h3>Tokyo</h3>
+  <p>Tokyo is the capital of Japan.</p>
+</div>
+
+<script>
+    timeoutPeriod = 600000
+
+  function refresh() {
+    window.location.reload();
+  }
+  const refreshInterval = setInterval('refresh()', timeoutPeriod); 
+
+  function openPopup() {
+  document.getElementById("status-update").style.display = "block";
+  clearInterval(refreshInterval);
+  }
+
+  function closePopup() {
+    document.getElementById("status-update").style.display = "none";
+    refreshInterval = setInterval('refresh()', timeoutPeriod);
+  }
+
+function openStatusTable(evt, status) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(status).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+
+</script>
+   
 </body>
-</html>
+</html> 

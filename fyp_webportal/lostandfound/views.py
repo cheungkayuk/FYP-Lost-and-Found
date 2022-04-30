@@ -7,8 +7,10 @@ class LostFoundTable(TemplateView):
 
     def get_context_data(self, **kwargs): 
         context = super().get_context_data(**kwargs)
-        context['item_list'] = LostFoundItem.objects.filter(status="Unhandled")
-        context['unhandled_number'] = len(context['item_list'])
+        context['Unhandled_item_list'] = LostFoundItem.objects.filter(status="Unhandled")
+        context['Processing_item_list'] = LostFoundItem.objects.filter(status="Processing")
+        context['Handled_item_list'] = LostFoundItem.objects.filter(status="Handled")
+        context['unhandled_number'] = len(context['Unhandled_item_list'])
         return context
 
 class LostItem(TemplateView):

@@ -1,4 +1,6 @@
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import TemplateView
 from lostandfound.models import *
 
@@ -20,5 +22,14 @@ class LostItem(TemplateView):
         item_id = self.kwargs['item_id']
 
         context = super().get_context_data(**kwargs)
-        context['item'] = LostFoundItem.objects.get(pk = item_id)
+        context['item'] = LostFoundItem.objects.get(pk=item_id)
         return context
+
+def UpdateStatus(request, item_id):
+    item = LostFoundItem.objects.get(pk=item_id)
+
+    if request.method == "POST":
+        item.status = request.POST.get('status')
+        item.save()
+
+    return HttpResponseRedirect(reverse("item-dashboard"))

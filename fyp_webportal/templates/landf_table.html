@@ -110,22 +110,22 @@ table.center {
   margin-right: auto;
 }
 
-#foundItems {
+.foundItems {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
 
-#foundItems td, #foundItems th {
+.foundItems td, .foundItems th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#foundItems tr:nth-child(even){background-color: #f2f2f2;}
+.foundItems tr:nth-child(even){background-color: #f2f2f2;}
 
-#foundItems tr:hover {background-color: #ddd;}
+.foundItems tr:hover {background-color: #ddd;}
 
-#foundItems th {
+.foundItems th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
@@ -257,7 +257,7 @@ table.center {
 </div>
 
 <div id="Unhandled" class="tabcontent">
-  <table class="center" style="width:80%" id="foundItems">
+  <table class="center foundItems" style="width:80%" id="UnhandledItems">
     <tr>
       <th>Item ID</th>
       <th>Item</th>
@@ -268,44 +268,47 @@ table.center {
     </tr>
     {% for item in Unhandled_item_list %}
     <tr>
-      <td>{{ item.id }}</td>
       <td>
         <a href="{% url 'item-info' item.pk %}">
-          {{ item.classname }}
+          {{ item.id }}
         </a>
       </td>
+      <td>{{ item.classname }}</td>
       <td>{{ item.checkpoint }}</td>
       <td>{{ item.direction }}</td>
       <td>{{ item.detectedTime }}</td>
       <td>
-        <div  class="buttonPopupContainer">
-          <button class="redButton"  style="position: relative" onclick="openPopup()">
+        <div class="buttonPopupContainer">
+          <button class="redButton" style="position: relative" onclick="openPopup('{{ item.id }}')">
             {{ item.status }}
           </button>
-          <div class="status-update-popup" id="status-update">
-            <form action="/action_page.php" class="status-update-container">
+          <div class="status-update-popup" id="status-update-{{ item.id }}">
+            <form action="{% url 'status' item.id%}" method="POST" class="status-update-container">
+              {% csrf_token %}
               <h1>Update Status</h1>
-              <button type="button" class="btn">Handled</button>
-              <button type="button" class="btn processing">Processing</button>
-              <button type="button" class="btn cancel" onclick="closePopup()">Cancel</button>
+              <button type="submit" class="btn" name="status" value="Handled" onclick="DoSomething()">Handled</button>
+              <button type="submit" class="btn processing" name="status" value="Processing" onclick="DoSomething()">Processing</button>
+              <button type="button" class="btn cancel" onclick="closePopup('{{ item.id }}')">Cancel</button>
               <br><br>
               <label for="optional_note"><b>Note (if any)</b></label>
               <input type="note" placeholder="Anything special" name="optional_note">
-          
               <button type="submit">Submit Optional Note</button>
             </form>
           </div>
         </div>
       </td>
+    </tr>
     {% empty %}
-      <td>No lost and found item yet.</td>
+    <tr>
+      <td>No unhandled lost and found item yet.</td>
+    </tr>
     {% endfor %}
     
   </table>
 </div>
 
 <div id="Processing" class="tabcontent">
-  <table class="center" style="width:80%" id="foundItems">
+  <table class="center foundItems" style="width:80%" id="ProcessingItems">
     <tr>
       <th>Item ID</th>
       <th>Item</th>
@@ -327,32 +330,34 @@ table.center {
       <td>{{ item.detectedTime }}</td>
       <td>
         <div  class="buttonPopupContainer">
-          <button class="redButton processing"  style="position: relative" onclick="openPopup()">
+          <button class="redButton processing"  style="position: relative" onclick="openPopup('{{ item.id }}')">
             {{ item.status }}
           </button>
-          <div class="status-update-popup" id="status-update">
-            <form action="/action_page.php" class="status-update-container">
+          <div class="status-update-popup" id="status-update-{{ item.id }}">
+            <form action="{% url 'status' item.id%}" method="POST" class="status-update-container">
+              {% csrf_token %}
               <h1>Update Status</h1>
-              <button type="button" class="btn">Handled</button>
-              <button type="button" class="btn processing">Processing</button>
-              <button type="button" class="btn cancel" onclick="closePopup()">Cancel</button>
+              <button type="submit" class="btn" name="status" value="Handled" onclick="DoSomething()">Handled</button>
+              <button type="button" class="btn cancel" onclick="closePopup('{{ item.id }}')">Cancel</button>
               <br><br>
               <label for="optional_note"><b>Note (if any)</b></label>
               <input type="note" placeholder="Anything special" name="optional_note">
-          
               <button type="submit">Submit Optional Note</button>
             </form>
           </div>
         </div>
       </td>
+    </tr>
     {% empty %}
+    <tr>
       <td>No processing lost and found item yet.</td>
+    </tr>
     {% endfor %}
   </table>
 </div>
 
 <div id="Handled" class="tabcontent">
-  <table class="center" style="width:80%" id="foundItems">
+  <table class="center foundItems" style="width:80%" id="HandledItems">
     <tr>
       <th>Item ID</th>
       <th>Item</th>
@@ -377,8 +382,11 @@ table.center {
           {{ item.status}}
         </div>
       </td>
+    </tr>
     {% empty %}
+    <tr>
       <td>No handled lost and found item yet.</td>
+    </tr>
     {% endfor %}
   </table>
 </div>
@@ -388,37 +396,51 @@ table.center {
 <script>
   timeoutPeriod = 600000
 
-function refresh() {
-  window.location.reload();
-}
-const refreshInterval = setInterval('refresh()', timeoutPeriod); 
+  function refresh() {
+    window.location.reload();
+  }
+  const refreshInterval = setInterval('refresh()', timeoutPeriod); 
 
-function openPopup() {
-document.getElementById("status-update").style.display = "block";
-clearInterval(refreshInterval);
-}
+  function openPopup(item_id) {
+    document.getElementById("status-update-"+item_id).style.display = "block";
+    clearInterval(refreshInterval);
+  }
 
-function closePopup() {
-  document.getElementById("status-update").style.display = "none";
-  refreshInterval = setInterval('refresh()', timeoutPeriod);
-}
+  function closePopup(item_id) {
+    document.getElementById("status-update-"+item_id).style.display = "none";
+    refreshInterval = setInterval('refresh()', timeoutPeriod);
+  }
 
-function openStatusTable(evt, status) {
-var i, tabcontent, tablinks;
-tabcontent = document.getElementsByClassName("tabcontent");
-for (i = 0; i < tabcontent.length; i++) {
-  tabcontent[i].style.display = "none";
-}
-tablinks = document.getElementsByClassName("tablinks");
-for (i = 0; i < tablinks.length; i++) {
-  tablinks[i].className = tablinks[i].className.replace(" active", "");
-}
-document.getElementById(status).style.display = "block";
-evt.currentTarget.className += " active";
-}
+  function openStatusTable(evt, status) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(status).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
 
-// Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+
+  function DoSomething(){
+    data = 'some data'
+    $.ajax({
+              type: 'POST',
+              url: 'getuser/',
+              data: data,
+              processData: false,
+              contentType: false,
+              success: function(json) {
+                  alert(json);
+              }
+          })
+  }
 
 </script>
  

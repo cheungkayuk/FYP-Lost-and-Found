@@ -9,4 +9,6 @@ urlpatterns = [
     path('dashboard/<int:item_id>', 
          views.LostItem.as_view(),
          name='item-info'),
+
+     path("<int:item_id>", views.UpdateStatus, name="status"),
 ]
